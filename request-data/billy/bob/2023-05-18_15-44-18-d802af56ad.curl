@@ -1,0 +1,5 @@
+curl \
+    -X GET \
+    -H 'User-Agent: curl/7.84.0' \
+    -H 'Accept: */*' \
+    '://localhost:7002/billy/bob'

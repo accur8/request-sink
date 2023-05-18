@@ -17,7 +17,7 @@
 val appVersion = a8.sbt_a8.versionStamp(file("."))
 
 val scalaLibVersion = "3.2.2"
-val syncVersion = "1.0.0-20230419_2025_master"
+val httpServerVersion = "1.0.0-20230518_1328_master"
 
 Global / scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
@@ -48,7 +48,7 @@ lazy val locus =
         compilerPlugin("com.github.ghik" % "zerowaste" % "0.2.6" cross CrossVersion.full),
 
         "dev.zio" %% "zio-http" % "3.0.0-RC1",
-        "io.accur8" %% "a8-sync-api" % syncVersion % "compile" exclude("org.scala-lang.modules", "scala-collection-compat_2.13"),
+        "io.accur8" %% "a8-http-server" % httpServerVersion % "compile" exclude("org.scala-lang.modules", "scala-collection-compat_2.13"),
 
         "org.scalatest" %% "scalatest" % "3.2.14" % Test,
 

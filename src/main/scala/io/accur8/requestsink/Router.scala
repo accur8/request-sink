@@ -1,22 +1,34 @@
 package io.accur8.requestsink
 
 
+import a8.http.HttpResponses
+import a8.http.model.HttpResponseException
 import a8.shared.app.LoggingF
 import zio.{Chunk, Layer, Task, ZIO}
 import zio.http.{Body, Http, HttpApp, HttpError, Request, Response, Status}
-import a8.shared.SharedImports._
+import a8.shared.SharedImports.*
+import a8.shared.ZFileSystem
 
 object Router {
+
   type Env = Any
   type M[A] = zio.ZIO[Env,Throwable,A]
+
+  case class RequestInfo(
+    curl: String,
+    requestBody: Option[String],
+    wrappedRequest: Request,
+  )
 }
 
 case class Router(
-  placeholder: String,
-  protocol: String = "http"
+  protocol: String = "http",
+  dataDir: ZFileSystem.Directory = ZFileSystem.dir("./request-data/"),
 )
   extends LoggingF
 {
+
+  lazy val sinkHandler = SinkHandler(dataDir)
 
   import Router._
 
@@ -27,9 +39,9 @@ case class Router(
       val rawEffect: M[Response] =
         for {
           // some dancing here since curl will consume the request body
-          wrappedRequest <- curl(request, true)
-          _ <- loggerF.debug(s"curl for request\n${wrappedRequest._1.indent("    ")}")
-          responseEffect = SinkHandler.processRequest(wrappedRequest._1, wrappedRequest._2)
+          requestInfo0 <- requestInfo(request)
+          _ <- loggerF.debug(s"curl for request\n${requestInfo0.curl.indent("    ")}")
+          responseEffect = sinkHandler.processRequest(requestInfo0)
           response <-
             responseEffect
               .uninterruptible
@@ -75,33 +87,33 @@ case class Router(
 
     }
 
-  def curl(request: Request, logRequestBody: Boolean): Task[(String,Request)] = {
-    if ( logRequestBody ) {
-      curlForRequest(request)
-    } else {
-      curlForRequestNoBody(request)
-    }
-  }
+//  def curl(request: Request, logRequestBody: Boolean): Task[(String,Request)] = {
+//    if ( logRequestBody ) {
+//      curlForRequest(request)
+//    } else {
+//      curlForRequestNoBody(request)
+//    }
+//  }
+//
+//
+//  def curlForRequestNoBody(request: Request): Task[(String,Request)] = {
+//
+//    val curl: String = {
+//      //          val requestBodyStr = new String(requestBodyByteBuf.array())
+//      val initialLines: Chunk[String] = Chunk("curl", s"-X ${request.method}")
+//      val headerLines: Chunk[String] = request.headers.map(h => s"-H '${h.headerName}: ${h.renderedValue}'").toChunk
+//      val url: Chunk[String] = Chunk(s"${protocol}://${request.rawHeader("Host").getOrElse("nohost")}${request.url.encode}")
+//      (initialLines ++ headerLines ++ url)
+//        .mkString(" \\\n    ")
+//    }
+//
+//    ZIO.succeed(curl -> request)
+//
+//  }
 
+  def requestInfo(request: Request): Task[RequestInfo] = {
 
-  def curlForRequestNoBody(request: Request): Task[(String,Request)] = {
-
-    val curl: String = {
-      //          val requestBodyStr = new String(requestBodyByteBuf.array())
-      val initialLines: Chunk[String] = Chunk("curl", s"-X ${request.method}")
-      val headerLines: Chunk[String] = request.headers.map(h => s"-H '${h.headerName}: ${h.renderedValue}'").toChunk
-      val url: Chunk[String] = Chunk(s"${config.protocol}://${request.rawHeader("Host").getOrElse("nohost")}${request.url.encode}")
-      (initialLines ++ headerLines ++ url)
-        .mkString(" \\\n    ")
-    }
-
-    ZIO.succeed(curl -> request)
-
-  }
-
-  def curlForRequest(request: Request): Task[(String,Request)] = {
-
-    def impl(requestBodyStr: Option[String]): (String,Request) = {
+    def impl(requestBodyStr: Option[String]): RequestInfo = {
       val curl: String = {
         //          val requestBodyStr = new String(requestBodyByteBuf.array())
         val initialLines: Chunk[String] = Chunk("curl", s"-X ${request.method}")
@@ -119,8 +131,11 @@ case class Router(
           case None =>
             Body.empty
         }
-
-      curl -> request.copy(body = newData)
+      RequestInfo(
+        curl = curl,
+        requestBody = requestBodyStr,
+        wrappedRequest = request.copy(body = newData),
+      )
 
     }
 
