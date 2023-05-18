@@ -17,7 +17,7 @@
 val appVersion = a8.sbt_a8.versionStamp(file("."))
 
 val scalaLibVersion = "3.2.2"
-val syncVersion = "1.0.0-20230502_1307_master"
+val syncVersion = "1.0.0-20230419_2025_master"
 
 Global / scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
