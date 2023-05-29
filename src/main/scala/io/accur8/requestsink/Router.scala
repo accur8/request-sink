@@ -1,8 +1,8 @@
 package io.accur8.requestsink
 
 
-import a8.http.HttpResponses
-import a8.http.model.HttpResponseException
+import a8.httpserver.HttpResponses
+import a8.httpserver.model.HttpResponseException
 import a8.shared.app.LoggingF
 import zio.{Chunk, Layer, Task, ZIO}
 import zio.http.{Body, Http, HttpApp, HttpError, Request, Response, Status}

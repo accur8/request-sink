@@ -3,8 +3,8 @@ package io.accur8.requestsink
 
 import zio.http.{Request, Response}
 import Router.*
-import a8.http.HttpResponses
-import a8.http.model.ContentPath
+import a8.httpserver.HttpResponses
+import a8.httpserver.model.ContentPath
 import a8.shared.FileSystem
 import a8.shared.SharedImports._
 
