@@ -17,7 +17,7 @@
 val appVersion = a8.sbt_a8.versionStamp(file("."))
 
 val scalaLibVersion = "3.2.2"
-val httpServerVersion = "1.0.0-20230518_1328_master"
+val httpServerVersion = "1.0.0-20230529_1417_master"
 
 Global / scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
