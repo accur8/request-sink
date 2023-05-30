@@ -38,7 +38,7 @@ object Main extends BootstrappedIOApp {
   override lazy val defaultAppName: String = "request-sink-server"
 
   override def runT: ZIO[BootstrapEnv, Throwable, Unit] = {
-    val router = Router("")
+    val router = Router()
     val effect =
       for {
         _ <- loggerF.info(s"http server is listening on port ${port}")

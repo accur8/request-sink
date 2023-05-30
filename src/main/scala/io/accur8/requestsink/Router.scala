@@ -76,40 +76,9 @@ case class Router(
 
       effectWithoutErrors
         .scoped
-//        .provide(
-//          zl_succeed(s3Client),
-//          zl_succeed(s3),
-//          zl_succeed(config),
-//          UserService.layer,
-//          zl_succeed(resolvedModel),
-//          zl_succeed(anonymousSubnetManager),
-//        )
 
     }
 
-//  def curl(request: Request, logRequestBody: Boolean): Task[(String,Request)] = {
-//    if ( logRequestBody ) {
-//      curlForRequest(request)
-//    } else {
-//      curlForRequestNoBody(request)
-//    }
-//  }
-//
-//
-//  def curlForRequestNoBody(request: Request): Task[(String,Request)] = {
-//
-//    val curl: String = {
-//      //          val requestBodyStr = new String(requestBodyByteBuf.array())
-//      val initialLines: Chunk[String] = Chunk("curl", s"-X ${request.method}")
-//      val headerLines: Chunk[String] = request.headers.map(h => s"-H '${h.headerName}: ${h.renderedValue}'").toChunk
-//      val url: Chunk[String] = Chunk(s"${protocol}://${request.rawHeader("Host").getOrElse("nohost")}${request.url.encode}")
-//      (initialLines ++ headerLines ++ url)
-//        .mkString(" \\\n    ")
-//    }
-//
-//    ZIO.succeed(curl -> request)
-//
-//  }
 
   def requestInfo(request: Request): Task[RequestInfo] = {
 

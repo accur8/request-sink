@@ -1,0 +1,8 @@
+curl \
+    -X POST \
+    -H 'User-Agent: curl/7.84.0' \
+    -H 'Accept: */*' \
+    -H 'Content-Length: 22' \
+    -H 'Content-Type: application/x-www-form-urlencoded' \
+    '://localhost:7002/billy/bob' \
+    --data 'some data to show raph'
