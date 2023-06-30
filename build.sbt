@@ -38,6 +38,12 @@ Global / versionScheme := Some("strict")
 
 Global / serverConnectionType := ConnectionType.Local
 
+ThisBuild / libraryDependencySchemes ++= Seq(
+  "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
+)
+
+ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
+
 
 lazy val locus =
   Common

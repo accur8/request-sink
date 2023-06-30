@@ -12,7 +12,13 @@
 //        build_machine : fullfillment
 //        build_user : glen
 // 
-//      
+//
+
+ThisBuild / libraryDependencySchemes ++= Seq(
+  "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
+)
+
+ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
 
 addSbtPlugin("io.github.davidgregory084" % "sbt-tpolecat" % "0.4.2")
 
@@ -37,6 +43,7 @@ addSbtPlugin("io.accur8" % "sbt-a8" % "1.2.0-20220113_1040")
 // This plugin can be removed when using Scala 2.13.0 or above
 addSbtPlugin("org.lyranthe.sbt" % "partial-unification" % "1.1.2")
 
+addSbtPlugin("org.xerial.sbt" % "sbt-pack" % "0.14")
 
 
 
